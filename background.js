@@ -4,9 +4,13 @@
 var backgroundAnimation = new Ocean();
 
 function setup(){
-  var canvas = createCanvas(window.innerWidth, window.innerHeight);
+  var canvas = createCanvas(windowWidth, windowHeight);
   canvas.id("p5-background");
   backgroundAnimation.setup();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 
