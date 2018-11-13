@@ -2,6 +2,7 @@
 // var backgroundAnimation = new Plot();
 // var backgroundAnimation = new Terrain();
 var backgroundAnimation = new Ocean();
+// var backgroundAnimation = new Tree();
 
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
@@ -74,6 +75,48 @@ function Terrain(){
     }
   };
 }
+
+// ================= Tree =================
+function Tree(){
+  var dots = [];
+  var n, wind;
+  var maxLen = 200;
+  var minLen = 8;
+  var angle;
+
+  function branch(len){
+    strokeWeight(len / maxLen * 10);
+    line(0, 0, 0, -len);
+    translate(0, -len);
+    if (len > minLen){
+      push();
+      rotate(angle);
+      branch(len * 0.67);
+      pop();
+      push();
+      rotate(-angle);
+      branch(len * 0.67);
+      pop();
+    }
+  }
+
+  this.setup = function(){
+    n = random(1000);
+    wind = random(1000);
+  };
+
+  this.draw = function(){
+    background(0);
+    stroke(255);
+    translate(width / 2, height);
+    rotate(map(noise(wind), 0, 1, -PI / 30, PI / 30));
+    angle = map(noise(n), 0, 1, PI / 20, PI / 3);
+    branch(maxLen);
+    n += 0.001;
+    wind += 0.0001;
+  };
+}
+
 
 
 // ================= PLOT =================
