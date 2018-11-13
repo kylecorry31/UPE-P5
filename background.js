@@ -82,7 +82,7 @@ function Plot(){
   var n = 0;
 
   function Dot(x){
-    this.x = x;
+    this.x = x / width;
     this.y = 0;
     this.radius = 5;
     var stack;
@@ -94,7 +94,7 @@ function Plot(){
     this.draw = function(){
       noStroke();
       fill('rgba(255, 255, 255, 0.6)');
-      ellipse(this.x, this.y, this.radius, this.radius);
+      ellipse(this.x * width, this.y, this.radius, this.radius);
     };
   }
 
@@ -127,8 +127,8 @@ function NightSky(){
   var stars = [];
 
   function Star(){
-    this.x = random(width);
-    this.y = random(height);
+    this.x = random();
+    this.y = random();
     var minOpacity = 0.4;
     this.opacity = random(minOpacity, 1);
     this.radius = random(3);
@@ -145,7 +145,7 @@ function NightSky(){
     this.draw = function(){
       noStroke();
       fill('rgba(255, 255, 255, ' + this.opacity + ')');
-      ellipse(this.x, this.y, this.radius, this.radius);
+      ellipse(this.x * width, this.y * height, this.radius, this.radius);
     };
   }
 
@@ -171,20 +171,20 @@ function Ocean(){
   var bubbles = [];
 
   function Bubble(){
-    this.x = random(width);
-    this.y = random(height + 1000);
+    this.x = random();
+    this.y = random() * 2;
     this.radius = random(10);
     this.noiseX = random(1000);
 
 
     this.update = function(){
-      this.x += map(noise(this.noiseX), 0, 1, -1, 1);
-      this.x = constrain(this.x, 0, width);
+      this.x += map(noise(this.noiseX), 0, 1, -0.001, 0.001);
+      this.x = constrain(this.x, 0, 1);
 
-      this.y -= 3;
+      this.y -= 0.005;
       if(this.y < 0){
-        this.y = random(height, height + 1000);
-        this.x = random(width);
+        this.y = 1 + random();
+        this.x = random();
       }
 
       this.noiseX += 0.001;
@@ -193,7 +193,7 @@ function Ocean(){
     this.draw = function(){
       noStroke();
       fill('rgba(255, 255, 255, 0.3)');
-      ellipse(this.x, this.y, this.radius + 4 * (1 - this.y / height), this.radius + 4 * (1 - this.y / height));
+      ellipse(this.x * width, this.y * height, this.radius + 4 * (1 - this.y / height), this.radius + 4 * (1 - this.y / height));
     };
   }
 
@@ -212,8 +212,8 @@ function Ocean(){
 
     if (mouseIsPressed){
       var bubble = new Bubble();
-      bubble.x = mouseX;
-      bubble.y = mouseY;
+      bubble.x = mouseX / width;
+      bubble.y = mouseY / height;
       bubbles.push(bubble);
     }
 
