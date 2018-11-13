@@ -2,6 +2,7 @@
 // var backgroundAnimation = new Plot();
 // var backgroundAnimation = new Terrain();
 var backgroundAnimation = new Ocean();
+// var backgroundAnimation = new Fireflies();
 // var backgroundAnimation = new Tree();
 
 function setup(){
@@ -78,7 +79,6 @@ function Terrain(){
 
 // ================= Tree =================
 function Tree(){
-  var dots = [];
   var n, wind;
   var maxLen = 200;
   var minLen = 8;
@@ -114,6 +114,78 @@ function Tree(){
     branch(maxLen);
     n += 0.001;
     wind += 0.0001;
+  };
+}
+
+// ================= Fireflies =================
+function Fireflies(){
+
+  var resolution = 10;
+  var cx, cy;
+  // var nX, nY;
+
+  var points = [];
+
+  function Point(x, y){
+    this.x = x;
+    this.y = y;
+    this.strength = 0;
+    var nX = random(1000);
+    var nY = random(1000);
+    var nS = random(1000);
+
+    this.update = function(){
+      this.x = map(noise(nX), 0, 1, 0, width);
+      this.y = map(noise(nY), 0, 1, 0, height);
+      this.strength = noise(nS);
+
+      this.x = constrain(this.x, 0, width);
+      this.y = constrain(this.y, 0, height);
+
+      nS += 0.001;
+      nX += 0.01;
+      nY += 0.01;
+    };
+
+  }
+
+  this.setup = function(){
+    cx = width / 2;
+    cy = height / 2;
+    points = [];
+    for (var i = 0; i < 20; i++) {
+      points.push(new Point(random(width), random(height)));
+    }
+  };
+
+  this.draw = function(){
+    background(0);
+    noStroke();
+    // cx = map(noise(nX), 0, 1, 0, width);
+    // cy = map(noise(nY), 0, 1, 0, height);
+
+    cx = mouseX;
+    cy = mouseY;
+
+    for (var x = 0; x < width; x+=resolution){
+      for (var y = 0; y < height; y+=resolution){
+        var s = 0;
+        points.forEach(function(p){
+          s += p.strength * 100 * 10 / dist(x, y, p.x, p.y);
+        });
+        var c = 0;
+        // var c = 1000 * 40 / dist(x, y, cx, cy);
+        s += c;
+        fill(s, s, c);
+        rect(x, y, resolution, resolution);
+      }
+    }
+
+    points.forEach(function(p){
+      p.update();
+    });
+
+
   };
 }
 
